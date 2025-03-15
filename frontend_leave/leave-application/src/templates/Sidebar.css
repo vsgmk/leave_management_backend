@@ -1,0 +1,55 @@
+.sidebar {
+  width: 250px;
+  height: 100vh;
+  background-color: #1f2937;
+  color: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding: 20px;
+}
+  
+  .sidebar-title {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .sidebar-links {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .sidebar-link {
+    display: block;
+    color: white;
+    text-decoration: none;
+    padding: 10px 0;
+    transition: 0.3s;
+  }
+  
+  .sidebar-link:hover {
+    color: #a0aec0;
+  }
+  
+  .logout-btn {
+    background: none;
+    border: none;
+    color: red;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 10px 0;
+    text-align: left;
+    display: flex;
+    align-items: center;
+  }
+  
+  .logout-btn:hover {
+    color: #ff7f7f;
+  }
+  
+  .app-container {
+    display: flex;
+  }
+  

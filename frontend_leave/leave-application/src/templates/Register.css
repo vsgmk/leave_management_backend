@@ -1,0 +1,82 @@
+/* General styling */
+body {
+  background-color: #f3f4f6; /* Light gray background */
+  font-family: Arial, sans-serif;
+}
+
+/* Centering the register form */
+.register-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f3f4f6;
+}
+
+/* Form container */
+.register-box {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 450px;
+  text-align: center;
+}
+
+/* Form title */
+.register-box h2 {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+/* Error message */
+.error-message {
+  color: red;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+/* Input fields */
+.register-box input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+/* Focus effect */
+.register-box input:focus {
+  border-color: #2563eb; /* Blue border on focus */
+  outline: none;
+  box-shadow: 0 0 5px rgba(37, 99, 235, 0.5);
+}
+
+/* Submit button */
+.register-box button {
+  width: 100%;
+  padding: 10px;
+  background-color: #2563eb;
+  color: white;
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+/* Hover effect */
+.register-box button:hover {
+  background-color: #1d4ed8;
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+  .register-box {
+    width: 90%;
+    padding: 1.5rem;
+  }
+}

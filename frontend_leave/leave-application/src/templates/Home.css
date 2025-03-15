@@ -1,0 +1,80 @@
+/* Background gradient */
+.home-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: linear-gradient(to right, #ebf8ff, #f3e8ff);
+}
+
+/* Heading Style */
+.home-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #2d3748;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+/* Button Styling */
+.home-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.home-buttons div {
+  display: flex;
+  gap: 15px;
+}
+
+/* Button Styles */
+.home-button {
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 30px;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.2);
+  border: none;
+}
+
+.home-button:hover {
+  transform: scale(1.05);
+}
+
+/* Button Colors */
+.student-login {
+  background-color: #3182ce;
+}
+
+.student-login:hover {
+  background-color: #2b6cb0;
+}
+
+.teacher-login {
+  background-color: #805ad5;
+}
+
+.teacher-login:hover {
+  background-color: #6b46c1;
+}
+
+.student-register {
+  background-color: #38a169;
+}
+
+.student-register:hover {
+  background-color: #2f855a;
+}
+
+.teacher-register {
+  background-color: #d69e2e;
+}
+
+.teacher-register:hover {
+  background-color: #b7791f;
+}

@@ -1,0 +1,26 @@
+.navbar {
+    background-color: #374151;
+    color: white;
+    padding: 0.1px 20px; /* Keep padding minimal */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin: 0; /* Ensure no extra margin */
+    box-sizing: border-box;
+    position: fixed; /* Make it fixed to the top */
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+.main-content {
+    margin: 0;
+    padding: 0;
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+}

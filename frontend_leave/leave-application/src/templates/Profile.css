@@ -1,0 +1,144 @@
+/* Profile Page */
+.profile-page {
+    display: flex;
+    flex-direction: column;
+    padding-top: 100px;
+    padding-bottom: 10px;
+    background-color: #f4f4f4;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Profile Content Layout */
+.profile-content {
+    display: flex;
+    flex: 1;
+}
+
+/* Profile Container */
+.profile-container {
+    flex: 1;
+    padding: 20px;
+    max-width: 800px;
+    margin: auto;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Heading */
+.profile-container h2 {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Profile Details */
+.profile-details {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Labels */
+.profile-details label {
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+/* Input Fields */
+.profile-details input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.profile-details input:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0px 0px 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Profile Information */
+.profile-details p {
+    font-size: 16px;
+    color: #444;
+    background: #f9f9f9;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+/* Buttons */
+.button-row {
+    display: flex;
+    gap: 10px;
+}
+
+.edit-btn, .save-btn, .cancel-btn {
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    flex: 1;
+    transition: background 0.3s ease;
+    border: none;
+}
+
+.edit-btn {
+    background: #007bff;
+    color: white;
+}
+
+.edit-btn:hover {
+    background: #0056b3;
+}
+
+.save-btn {
+    background: #28a745;
+    color: white;
+}
+
+.save-btn:hover {
+    background: #218838;
+}
+
+.cancel-btn {
+    background: #dc3545;
+    color: white;
+}
+
+.cancel-btn:hover {
+    background: #c82333;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .profile-container {
+        width: 90%;
+        padding: 15px;
+    }
+    
+    .input-row {
+        flex-direction: column;
+    }
+}
+
+/* Flexbox for Input Rows */
+.input-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+/* Individual Input Group Styling */
+.input-group {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
