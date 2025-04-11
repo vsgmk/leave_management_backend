@@ -7,6 +7,8 @@ import Dashboard from "./templates/Dashboard";  // Import Dashboard
 import TeacherDashboard from "./templates/TeacherDashboard";
 import YourLeaves from "./templates/YourLeaves";
 import Profile from "./templates/Profile";
+import MarkAttendance from "./templates/MarkAttendance";
+import ViewAttendance from "./templates/ViewAttendance"
 
 function App() {
   return (
@@ -20,6 +22,11 @@ function App() {
         <Route path="/teacher_dashboard" element={<TeacherDashboard />} />
         <Route path="/your-leaves" element={<YourLeaves />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/teacher_dashboard" element={<TeacherDashboard />} />
+        <Route path="/mark-attendance" element={<MarkAttendance />} />
+        <Route path="/view-attendance" element={<ViewAttendance />} />
+
+
       </Routes>
     </Router>
   );

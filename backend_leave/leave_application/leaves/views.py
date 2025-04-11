@@ -7,33 +7,49 @@ from django.utils.timezone import now
 from leaves.models import OTPModel, User
 from django.conf import settings
 from rest_framework.permissions import IsAuthenticated
-from .models import LeaveApplication, User
+from .models import LeaveApplication, User, Attendance
 from django.contrib.auth import get_user_model, authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.hashers import make_password
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.authentication import TokenAuthentication
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from django.shortcuts import get_object_or_404
+from rest_framework.response import Response
+from django.db.models import Count
 
 User = get_user_model()  # Fetch custom user model
+
 @csrf_exempt
 def register_student(request):
     if request.method == "POST":
         try:
             data = json.loads(request.body)
-            
-            required_fields = ["first_name", "last_name", "roll_number", "branch", "batch", "year", "email", "phone_number", "password"]
+
+            required_fields = [
+                "first_name", "last_name", "roll_number", "branch", "batch",
+                "year", "division", "email", "phone_number", "password"
+            ]
+
             for field in required_fields:
                 if not data.get(field):
                     return JsonResponse({"error": f"{field.replace('_', ' ').title()} is required."}, status=400)
-            
+
             email = data["email"].strip()
             roll_number = data["roll_number"].strip()
-            
+            phone_number = data["phone_number"].strip()
+
+            # Check for uniqueness
             if User.objects.filter(email=email).exists():
                 return JsonResponse({"error": "Email already registered"}, status=400)
-            if User.objects.filter(roll_number=roll_number).exists():
-                return JsonResponse({"error": "Roll number already registered"}, status=400)
+            if User.objects.filter(
+                roll_number=roll_number,
+                year=data["year"].strip(),
+                division=data["division"].strip()
+            ).exists():
+                return JsonResponse({"error": f"Roll number {roll_number} already registered in {data['year']} {data['division']}"}, status=400)
+            if User.objects.filter(phone_number=phone_number).exists():
+                return JsonResponse({"error": "Phone number already registered"}, status=400)
 
             # Generate and store OTP
             otp = random.randint(100000, 999999)
@@ -46,16 +62,16 @@ def register_student(request):
             send_mail(
                 "Your OTP for Registration",
                 f"Your OTP is: {otp}",
-                "vaibhavsurvase674@gmail.com",  # Change to your admin email
+                "vaibhavsurvase674@gmail.com",  # Replace with your admin email
                 [email],
                 fail_silently=False,
             )
 
             return JsonResponse({"message": "OTP sent to email. Verify to complete registration."}, status=200)
-        
+
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=500)
-    
+
     return JsonResponse({"error": "Invalid request method"}, status=400)
 
 
@@ -121,6 +137,7 @@ def verify_otp(request):
             user.branch = data["branch"].strip()
             user.batch = data["batch"].strip()
             user.year = year
+            user.division = data["division"].strip()
 
         user.set_password(data["password"])
         user.save()
@@ -155,6 +172,10 @@ def login_view(request):
 
             if not user.is_verified:
                 return JsonResponse({"error": "Email not verified. Please verify your email first."}, status=400)
+            
+            if user.is_teacher:
+                return JsonResponse({"error": "Access denied. Only students can log in here."}, status=403)
+
 
             refresh = RefreshToken.for_user(user)
             access_token = str(refresh.access_token)
@@ -345,8 +366,8 @@ def apply_leave(request):
     try:
         data = json.loads(request.body)
 
-        # Required fields
-        required_fields = ["name", "from_date", "to_date", "reason", "teachers"]
+        # Required fields (No name field now)
+        required_fields = ["from_date", "to_date", "reason", "teachers"]
         for field in required_fields:
             if not data.get(field):
                 return JsonResponse({"error": f"{field.replace('_', ' ').title()} is required."}, status=400)
@@ -365,7 +386,6 @@ def apply_leave(request):
         # Create Leave Application and Store in DB
         leave_application = LeaveApplication.objects.create(
             student=request.user,
-            name=data["name"],
             from_date=data["from_date"],
             to_date=data["to_date"],
             reason=data["reason"],
@@ -380,7 +400,6 @@ def apply_leave(request):
 
         You have received a leave application request from {request.user.first_name} {request.user.last_name}.
 
-        Student Name: {data["name"]}
         From Date: {data["from_date"]}
         To Date: {data["to_date"]}
         Reason: {data["reason"]}
@@ -399,7 +418,7 @@ def apply_leave(request):
             fail_silently=False,
         )
 
-        return JsonResponse({"message": "Leave application submitted successfully and stored in the database!"}, status=201)
+        return JsonResponse({"message": "Leave application submitted successfully!"}, status=201)
 
     except json.JSONDecodeError:
         return JsonResponse({"error": "Invalid JSON data"}, status=400)
@@ -618,26 +637,292 @@ def update_profile(request):
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
 
+@csrf_exempt
+@api_view(["POST"])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def mark_attendance(request):
+    try:
+        data = json.loads(request.body)
+        print("Received Data:", data)
+
+        date = data.get("date")
+        time_slot = data.get("time_slot")
+        attendance_data = data.get("attendance")
+        year = data.get("year")
+        branch = data.get("branch")
+        division = data.get("division")
+        session_type = data.get("session_type")
+        batch = data.get("batch")
+
+        if not date or not time_slot or not isinstance(attendance_data, dict):
+            return JsonResponse({"message": "Please provide date, time slot, and attendance data."}, status=400)
+
+        teacher = request.user
+
+        # Check if attendance already exists
+# NEW:
+        existing_attendance = Attendance.objects.filter(
+            date=date,
+            time_slot=time_slot,
+            teacher=teacher,
+            division=division,
+            session_type=session_type,
+            batch=batch
+        ).first()
+
+        if existing_attendance:
+            return JsonResponse({
+                "message": f"Attendance is already marked for {date}, slot: {time_slot}, division: {division}, session: {session_type}, batch: {batch}."
+            }, status=400)
 
 
+        for roll_number, status in attendance_data.items():
+            if not (roll_number and status):
+                return JsonResponse({"message": "Invalid attendance data."}, status=400)
+
+            student = get_object_or_404(User, roll_number=roll_number, is_teacher=False)
+
+            Attendance.objects.create(
+                student=student,
+                date=date,
+                time_slot=time_slot,
+                status=status,
+                teacher=teacher,
+                year=year,
+                branch=branch,
+                division=division,
+                session_type=session_type,
+                batch=batch
+            )
+
+            # Send email to absent students
+            if status == "Absent":
+                student_name = f"{student.first_name} {student.last_name}"
+                teacher_name = f"{teacher.first_name} {teacher.last_name}"
+
+                send_mail(
+                    subject="Lecture Absence Notification",
+                    message=f"Dear {student_name},\n\n"
+                            f"You were marked absent for the lecture on {date} during {time_slot}.\n"
+                            f"Teacher: {teacher_name}\n\n"
+                            f"Please ensure to attend future lectures.\n\n"
+                            f"Regards,\nCollege Admin",
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[student.email],
+                    fail_silently=False,
+                )
+
+        return JsonResponse({"message": "Attendance marked successfully!"}, status=200)
+
+    except json.JSONDecodeError:
+        return JsonResponse({"message": "Invalid JSON format in request."}, status=400)
+
+    except Exception as e:
+        print("Error:", e)
+        return JsonResponse({"message": str(e)}, status=500)
 
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_students(request):
+    year = request.GET.get('year')
+    division = request.GET.get('division')
+    batch = request.GET.get('batch')
+    branch = request.GET.get('branch')
+    session_type = request.GET.get('session_type')  # This is NOT in DB – just used for logic
+
+    if not (year and division and session_type):
+        return JsonResponse({'error': 'Year, Division, and Session Type are required'}, status=400)
+
+    try:
+        year = int(year)
+    except ValueError:
+        return JsonResponse({'error': 'Year must be an integer'}, status=400)
+
+    students = User.objects.filter(year=year)
+
+    # 🎯 If session is 'Lecture' → filter using year + division [+ branch if SY/BE]
+    if session_type == "Lecture":
+        students = students.filter(division=division)
+        if year > 1:  # SY, TY, BE
+            if not branch:
+                return JsonResponse({'error': 'Branch is required for SY/TY/BE lectures'}, status=400)
+            students = students.filter(branch=branch)
+
+    # 🔍 If session is 'Practical' → filter using year + division + batch [+ branch if SY/BE]
+    elif session_type == "Practical":
+        if not batch:
+            return JsonResponse({'error': 'Batch is required for practicals'}, status=400)
+        students = students.filter(division=division, batch=batch)
+        if year > 1:
+            if not branch:
+                return JsonResponse({'error': 'Branch is required for SY/TY/BE practicals'}, status=400)
+            students = students.filter(branch=branch)
+
+    else:
+        return JsonResponse({'error': 'Invalid session type. Use "Lecture" or "Practical"'}, status=400)
+
+    # 🎒 Prepare final student list
+    student_data = [
+        {
+            'id': student.id,
+            'name': f"{student.first_name} {student.last_name}",
+            'roll_number': student.roll_number,
+            'year': student.year,
+            'division': student.division,
+            'batch': student.batch,
+            'branch': student.branch,
+        }
+        for student in students
+    ]
+
+    return Response(student_data)
+
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from django.contrib.auth import get_user_model
+from .models import Attendance
+from django.http import JsonResponse
+
+User = get_user_model()
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])  # Ensures authentication
+def get_attendance(request):
+    user = request.user  # Get the authenticated user
+    date = request.GET.get("date")  # Get selected date from request
+
+    if not date:
+        return Response({"error": "Date is required"}, status=400)
+
+    if user.is_teacher:
+        # If the user is a teacher, fetch attendance for all students on that date
+        attendance_records = (
+            Attendance.objects.filter(teacher=user, date=date)
+            .select_related("student")
+            .order_by("student__roll_number")
+            .values(
+                "student__roll_number",  # Include roll number
+                "student__first_name",
+                "student__last_name",
+                "student__email",
+                "date",
+                "time_slot",
+                "status",
+            )
+        )
+    else:
+        # If the user is a student, fetch only their own attendance for that date
+        attendance_records = (
+            Attendance.objects.filter(student=user, date=date)
+            .select_related("student")  # Make sure to select the student to get roll number and full name
+            .values("student__roll_number", "student__first_name", "student__last_name", "student__email", "date", "time_slot", "status")
+        )
+
+    if not attendance_records:
+        return Response({"message": "No attendance records found for the selected date."}, status=200)
+
+    if user.is_teacher:
+        # Format response for teachers
+        formatted_records = [
+            {
+                "roll_number": entry["student__roll_number"],  # Include roll number
+                "full_name": f"{entry['student__first_name']} {entry['student__last_name']}",
+                "email": entry["student__email"],
+                "date": entry["date"],
+                "time_slot": entry["time_slot"],
+                "status": entry["status"],
+            }
+            for entry in attendance_records
+        ]
+    else:
+        # Format response for students
+        formatted_records = [
+            {
+                "roll_number": entry["student__roll_number"],  # Include roll number
+                "full_name": f"{entry['student__first_name']} {entry['student__last_name']}",  # Include full name
+                "date": entry["date"],
+                "time_slot": entry["time_slot"],
+                "status": entry["status"],
+            }
+            for entry in attendance_records
+        ]
+
+    return Response(formatted_records, status=200)
+
+@api_view(["PUT"])
+@permission_classes([IsAuthenticated])
+def edit_attendance(request):
+    """
+    API to edit attendance before submission.
+    """
+    if not request.user.is_teacher:
+        return JsonResponse({"error": "Only teachers can edit attendance"}, status=403)
+
+    try:
+        data = json.loads(request.body)
+        date = data.get("date")
+        time_slot = data.get("time_slot")  # Added time_slot in the check
+        attendance_data = data.get("attendance")  # List of { "status": "Present", "roll_number": "12345" }
+
+        # Check if required fields are present
+        if not date or not time_slot or not attendance_data:
+            return JsonResponse({"error": "Missing required fields"}, status=400)
+
+        # Update all student attendance for that date and time slot
+        for entry in attendance_data:
+            status = entry.get("status")
+            roll_number = entry.get("roll_number")  # Roll number for reference
+
+            # Make sure status and roll_number are valid
+            if not status or not roll_number:
+                continue
+
+            try:
+                student = User.objects.get(roll_number=roll_number)
+
+                # Check if there's more than one attendance for this student at the same time
+                attendance_count = Attendance.objects.filter(student=student, date=date, time_slot=time_slot).count()
+
+                if attendance_count > 1:
+                    # Handle multiple records case (you can choose to delete or update only one)
+                    Attendance.objects.filter(student=student, date=date, time_slot=time_slot).delete()
+                    print(f"Multiple records found for {student} on {date} at {time_slot}, records deleted.")
+
+                # Update or create a single attendance record with teacher_id (logged-in teacher)
+                attendance, created = Attendance.objects.update_or_create(
+                    student=student, date=date, time_slot=time_slot,
+                    defaults={"status": status, "teacher": request.user}  # Adding teacher information
+                )
+            except User.DoesNotExist:
+                continue  # Skip if the student doesn't exist
+
+        return JsonResponse({"message": "Attendance updated successfully"}, status=200)
+
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
 
 
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def attendance_percentage(request, student_id):
+    """
+    API to calculate attendance percentage.
+    """
+    if request.user.id != student_id and not request.user.is_teacher:
+        return JsonResponse({"error": "Unauthorized access"}, status=403)
 
+    total_classes = Attendance.objects.filter(student_id=student_id).count()
+    present_classes = Attendance.objects.filter(student_id=student_id, status="Present").count()
+    
+    if total_classes == 0:
+        percentage = 0
+    else:
+        percentage = (present_classes / total_classes) * 100
 
-
-
-
-
-
-
-
-
-
-
-
-
+    return JsonResponse({"percentage": round(percentage, 2)}, status=200)
 
 
 

@@ -2,9 +2,9 @@
 .profile-page {
     display: flex;
     flex-direction: column;
-    padding-top: 100px;
-    padding-bottom: 10px;
-    background-color: #f4f4f4;
+    padding-top: 80px;
+    padding-bottom: 30px;
+    background-color: rgba(66, 66, 66, 0); 
     font-family: 'Arial', sans-serif;
 }
 
@@ -21,8 +21,9 @@
     max-width: 800px;
     margin: auto;
     background: #ffffff;
+    border: 2px solid #e2e8f0; /* Light border */
     border-radius: 10px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.15); /* Enhanced shadow */
 }
 
 /* Heading */
@@ -30,21 +31,27 @@
     text-align: center;
     font-size: 24px;
     font-weight: bold;
-    color: #333;
+    color: #2d3748;
     margin-bottom: 20px;
 }
 
-/* Profile Details */
-.profile-details {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+/* Profile Info Display - Two in One Row */
+.profile-details p {
+  margin: 10px 0;
+  font-size: 16px;
+  flex: 1;
+}
+
+.profile-view-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
 }
 
 /* Labels */
 .profile-details label {
     font-weight: bold;
-    color: #555;
+    color: #4a5568;
     margin-bottom: 5px;
 }
 
@@ -52,16 +59,18 @@
 .profile-details input {
     width: 100%;
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid #cbd5e0;
     border-radius: 5px;
     font-size: 16px;
+    background: #f7fafc;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
     transition: all 0.3s ease;
 }
 
 .profile-details input:focus {
-    border-color: #007bff;
+    border-color: #4299e1;
     outline: none;
-    box-shadow: 0px 0px 5px rgba(0, 123, 255, 0.5);
+    box-shadow: 0px 0px 5px rgba(66, 153, 225, 0.5);
 }
 
 /* Profile Information */
@@ -71,6 +80,8 @@
     background: #f9f9f9;
     padding: 10px;
     border-radius: 5px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.08);
 }
 
 /* Buttons */
@@ -79,42 +90,50 @@
     gap: 10px;
 }
 
-.edit-btn, .save-btn, .cancel-btn {
-    padding: 12px;
-    font-size: 16px;
-    font-weight: bold;
-    border-radius: 5px;
-    cursor: pointer;
-    flex: 1;
-    transition: background 0.3s ease;
-    border: none;
-}
-
+/* Edit Button */
 .edit-btn {
-    background: #007bff;
-    color: white;
+  background:rgb(89, 0, 255); /* Dark Blue */
+  color: white;
+  padding: 16px 32px;  /* Increased height */
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 20px;
+  border: none;
+  transition: background 0.3s ease;
 }
 
 .edit-btn:hover {
-    background: #0056b3;
+  background:rgb(94, 47, 138); /* Slightly darker shade */
 }
 
+/* Edit Button */
+.edit-btn {
+    background: #9d9d9d;
+    color: white;
+}
+
+/* Save Button */
 .save-btn {
-    background: #28a745;
+    background: #38a169;
     color: white;
 }
 
 .save-btn:hover {
-    background: #218838;
+    background: #2f855a;
+    transform: scale(1.02);
 }
 
+/* Cancel Button */
 .cancel-btn {
-    background: #dc3545;
+    background: #ef4444;
     color: white;
 }
 
 .cancel-btn:hover {
-    background: #c82333;
+    background: #dc2626;
+    transform: scale(1.02);
 }
 
 /* Responsive Design */
@@ -123,7 +142,7 @@
         width: 90%;
         padding: 15px;
     }
-    
+
     .input-row {
         flex-direction: column;
     }
@@ -132,8 +151,9 @@
 /* Flexbox for Input Rows */
 .input-row {
     display: flex;
+    width: 780px;
     justify-content: space-between;
-    gap: 20px;
+    gap: 40px;
 }
 
 /* Individual Input Group Styling */
@@ -141,4 +161,93 @@
     display: flex;
     flex-direction: column;
     flex: 1;
+}
+
+/* Button Colors for Other Buttons */
+.student-login,
+.teacher-login,
+.student-register,
+.teacher-register {
+    box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.15);
+    border: 1px solid #ccc;
+}
+
+.student-login {
+    background-color: #3182ce;
+}
+
+.student-login:hover {
+    background-color: #2b6cb0;
+}
+
+.teacher-login {
+    background-color: #805ad5;
+}
+
+.teacher-login:hover {
+    background-color: #6b46c1;
+}
+
+.student-register {
+    background-color: #38a169;
+}
+
+.student-register:hover {
+    background-color: #2f855a;
+}
+
+.teacher-register {
+    background-color: #d69e2e;
+}
+
+.teacher-register:hover {
+    background-color: #b7791f;
+}
+
+/* Background Gradient */
+.home-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: linear-gradient(to right, #ebf8ff, #f3e8ff);
+}
+
+/* Heading Style */
+.home-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #2d3748;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+/* Button Layout */
+.home-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.home-buttons div {
+    display: flex;
+    gap: 15px;
+}
+
+/* Button Base Style */
+.home-button {
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 30px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.2);
+    border: 1px solid #ccc;
+}
+
+.home-button:hover {
+    transform: scale(1.05);
 }

@@ -1,19 +1,25 @@
 .navbar {
-    background-color: #374151;
-    color: white;
-    padding: 0.1px 20px; /* Keep padding minimal */
+    background-color: white;
+    color: black;
+    padding: 5px 40px 5px 50px; /* Top: 5px, Right: 40px, Bottom: 5px, Left: 30px */
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
-    margin: 0; /* Ensure no extra margin */
+    width: calc(100% - 330px); /* Adjusted for 30px left + 40px right */
     box-sizing: border-box;
-    position: fixed; /* Make it fixed to the top */
+    position: fixed;
     top: 0;
     left: 0;
     right: 0;
+    margin: 10px 300px;
+    border: 2px solid black;
+    border-radius: 12px;
+    height: 50px;
     z-index: 1000;
 }
+
+
+
 
 .main-content {
     margin: 0;

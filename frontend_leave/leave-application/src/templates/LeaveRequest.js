@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Swal from "sweetalert2";
 import "./LeaveRequest.css"; // Importing CSS
 
 const LeaveRequest = () => {
@@ -39,6 +40,16 @@ const LeaveRequest = () => {
 
   // Function to update leave status (Approve/Reject)
   const handleStatusUpdate = async (leaveId, status) => {
+    const confirmResult = await Swal.fire({
+      title: `Are you sure you want to ${status.toLowerCase()} this leave?`,
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: `Yes, ${status}`,
+      cancelButtonText: "Cancel",
+    });
+
+    if (!confirmResult.isConfirmed) return;
+
     try {
       const token = localStorage.getItem("access_token");
 
@@ -55,17 +66,22 @@ const LeaveRequest = () => {
         throw new Error("Failed to update leave status.");
       }
 
-      // Update UI immediately
       setLeaveRequests((prevRequests) =>
         prevRequests.map((request) =>
           request.id === leaveId ? { ...request, status } : request
         )
       );
 
-      alert(`Leave request ${status.toLowerCase()} successfully!`);
+      Swal.fire({
+        title: `Success!`,
+        text: `Leave request ${status.toLowerCase()} successfully.`,
+        icon: "success",
+        timer: 1500,
+        showConfirmButton: false,
+      });
     } catch (error) {
       console.error("Error updating leave status:", error);
-      alert("Failed to update leave status.");
+      Swal.fire("Error", "Failed to update leave status.", "error");
     }
   };
 

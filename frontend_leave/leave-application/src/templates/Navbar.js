@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { User } from "lucide-react";
 import "./Navbar.css";
+import { CalendarCheck, FileMinus, ClipboardList } from "lucide-react";
 
 const Navbar = () => {
   const [userName, setUserName] = useState("User");
@@ -15,8 +16,8 @@ const Navbar = () => {
 
   return (
     <div className="navbar">
-      <h1 className="navbar-title">Welcome</h1>
-      <User className="navbar-icon" />
+      <h2 className="navbar-title"><ClipboardList size={20} className="mr-2" /> Leave Management
+      </h2>
     </div>
   );
 };

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./YourLeaves.css";
 import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
+import Footer from "./Footer"; // ✅ Import Footer
 
 const YourLeaves = () => {
   const [leaveRequests, setLeaveRequests] = useState([]);
@@ -84,6 +85,7 @@ const YourLeaves = () => {
           )}
         </div>
       </div>
+      <Footer /> {/* ✅ Footer added here */}
     </div>
   );
 };

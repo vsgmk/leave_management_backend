@@ -41,3 +41,32 @@ export const applyLeave = async (leaveData) => {
   });
 };
 
+
+
+export const getStudents = async () => {
+  const response = await axios.get(`${BASE_URL}/api/students/`);
+  return response.data;
+};
+
+export const markAttendance = async (data) => {
+  await axios.post(`${BASE_URL}/api/mark-attendance/`, data);
+};
+
+export const getAttendance = async (date, slot) => {
+  const response = await axios.get(`${BASE_URL}/api/attendance/view/`, { params: { date, slot } });
+  return response.data;
+};
+
+export const editAttendance = async (date, slot, attendance) => {
+  await axios.put(`${BASE_URL}/api/attendance/edit/`, { date, slot, attendance });
+};
+
+export const getStudentAttendance = async (studentId) => {
+  const response = await axios.get(`${BASE_URL}/api/attendance/view/${studentId}/`);
+  return response.data;
+};
+
+export const getAttendancePercentage = async (studentId) => {
+  const response = await axios.get(`${BASE_URL}/api/attendance/percentage/${studentId}/`);
+  return response.data;
+};

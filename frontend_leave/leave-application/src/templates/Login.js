@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { loginStudent, loginTeacher } from "../services/api";
+import Swal from "sweetalert2";  // Import SweetAlert2
 import "./Login.css"; // Import CSS file
 
 const Login = () => {
@@ -35,11 +36,24 @@ const Login = () => {
       localStorage.setItem("refresh_token", response.data.refresh_token);
       localStorage.setItem("user", JSON.stringify(response.data.user));
 
-      alert(response.data.message);
+      // Success SweetAlert
+      Swal.fire({
+        icon: "success",
+        title: "Login Successful",
+        text: response.data.message,
+      });
+
       navigate(response.data.user.is_teacher ? "/teacher_dashboard" : "/dashboard");
     } catch (error) {
       console.error("Login error:", error.response?.data || error);
       setError(error.response?.data?.error || "Login failed");
+
+      // Error SweetAlert
+      Swal.fire({
+        icon: "error",
+        title: "Login Failed",
+        text: error.response?.data?.error || "Invalid login credentials",
+      });
     }
   };
 

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import Navbar from "./Navbar"; 
 import Sidebar from "./Sidebar";
 import "./Profile.css";
+import Footer from "./Footer"; // Adjust path as needed
+import Swal from "sweetalert2"; // Import SweetAlert2
 
 const Profile = () => {
   const [profile, setProfile] = useState(null);
@@ -70,9 +72,20 @@ const Profile = () => {
 
       setProfile(updatedProfile);
       setIsEditing(false);
-      alert("Profile updated successfully!");
+
+      // Use SweetAlert2 for success message
+      Swal.fire({
+        icon: "success",
+        title: "Profile Updated",
+        text: "Your profile has been successfully updated!",
+      });
     } catch (error) {
-      alert("Error updating profile.");
+      // Use SweetAlert2 for error message
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "There was an error updating your profile.",
+      });
     }
   };
 
@@ -235,6 +248,7 @@ const Profile = () => {
           )}
         </div>
       </div>
+      <Footer /> {/* <- Add Footer here */}
     </div>    
   );
 };

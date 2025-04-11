@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import Swal from "sweetalert2"; // Import SweetAlert2
 import { applyLeave } from "../services/api";
 import "./LeaveForm.css"; // Importing CSS
 
 const LeaveForm = () => {
   const [formData, setFormData] = useState({
-    name: "",
     from_date: "",
     to_date: "",
     reason: "",
@@ -57,9 +57,30 @@ const LeaveForm = () => {
       const response = await applyLeave(formData);
       setSuccessMessage(response.data.message);
       setError("");
+
+      // Success SweetAlert
+      Swal.fire({
+        icon: "success",
+        title: "Leave Request Submitted",
+        text: response.data.message,
+      });
+
+      setFormData({
+        from_date: "",
+        to_date: "",
+        reason: "",
+        teachers: [],
+      }); // Clear form after submission
     } catch (error) {
       setError(error.response?.data?.error || "Failed to submit leave request.");
       setSuccessMessage("");
+
+      // Error SweetAlert
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: error.response?.data?.error || "Failed to submit leave request.",
+      });
     }
   };
 
@@ -71,31 +92,43 @@ const LeaveForm = () => {
       {successMessage && <p className="success-message">{successMessage}</p>}
 
       <form onSubmit={handleSubmit}>
-        <div className="input-group">
-          <label>Student Name:</label>
-          <input type="text" name="name" value={formData.name} onChange={handleChange} required />
-        </div>
-
         <div className="date-group">
           <div className="input-group">
             <label>From Date:</label>
-            <input type="date" name="from_date" value={formData.from_date} onChange={handleChange} required />
+            <input
+              type="date"
+              name="from_date"
+              value={formData.from_date}
+              onChange={handleChange}
+              required
+            />
           </div>
         
           <div className="input-group">
             <label>To Date:</label>
-            <input type="date" name="to_date" value={formData.to_date} onChange={handleChange} required />
+            <input
+              type="date"
+              name="to_date"
+              value={formData.to_date}
+              onChange={handleChange}
+              required
+            />
           </div>
         </div>        
 
         <div className="input-group">
           <label>Reason for Leave:</label>
-          <textarea name="reason" value={formData.reason} onChange={handleChange} required />
+          <textarea
+            name="reason"
+            value={formData.reason}
+            onChange={handleChange}
+            required
+          />
         </div>
 
         <div className="input-group">
           <label>Select Teachers (Max 3):</label>
-          <div className="teacher-checkboxes">
+          <div className="teacher-checkboxes-scroll">
             {teachers.map((teacher) => (
               <label key={teacher.id} className="teacher-checkbox">
                 <input
@@ -109,7 +142,6 @@ const LeaveForm = () => {
             ))}
           </div>
         </div>
-
         <button type="submit">Submit Leave Request</button>
       </form>
     </div>

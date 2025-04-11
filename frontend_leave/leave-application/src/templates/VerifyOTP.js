@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { verifyOTP } from "../services/api";
-import "./VerifyOTP.css"
+import Swal from "sweetalert2";
+import "./VerifyOTP.css";
 
 const VerifyOTP = () => {
   const location = useLocation();
@@ -16,10 +17,21 @@ const VerifyOTP = () => {
     e.preventDefault();
     try {
       const response = await verifyOTP({ ...formData, email, otp });
-      alert(response.data.message);
+      // Show success SweetAlert
+      Swal.fire({
+        icon: "success",
+        title: "OTP Verified",
+        text: response.data.message,
+      });
       navigate("/login"); // Redirect to login after successful verification
     } catch (error) {
       setError(error.response?.data?.error || "Invalid OTP");
+      // Show error SweetAlert
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: error.response?.data?.error || "Invalid OTP",
+      });
     }
   };
 
