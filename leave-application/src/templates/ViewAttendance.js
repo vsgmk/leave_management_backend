@@ -26,7 +26,7 @@ const ViewAttendance = () => {
         }
 
         try {
-            const response = await axios.get(`http://localhost:8000/api/get_attendance/?date=${date}`, {
+            const response = await axios.get(`https://leave-management-backend-8.onrender.com/api/get_attendance/?date=${date}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
@@ -73,7 +73,7 @@ const ViewAttendance = () => {
 
         try {
             const response = await axios.put(
-                "http://localhost:8000/api/edit_attendance/",
+                "https://leave-management-backend-8.onrender.com/api/edit_attendance/",
                 payload,
                 {
                     headers: {

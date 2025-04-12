@@ -23,7 +23,7 @@ const AttendanceSheet = () => {
 
   const fetchStudents = async () => {
     try {
-      const response = await fetch("http://localhost:8000/api/students/", {
+      const response = await fetch("https://leave-management-backend-8.onrender.com/api/students/", {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
 
@@ -60,7 +60,7 @@ const AttendanceSheet = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:8000/api/mark-attendance/", {
+      const response = await fetch("https://leave-management-backend-8.onrender.com/api/mark-attendance/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

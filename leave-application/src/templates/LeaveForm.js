@@ -18,7 +18,7 @@ const LeaveForm = () => {
 
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/api/get_teachers/")
+      .get("https://leave-management-backend-8.onrender.com/api/get_teachers/")
       .then((response) => setTeachers(response.data.teachers))
       .catch((error) => console.error("Error fetching teachers:", error));
   }, []);

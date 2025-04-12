@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://127.0.0.1:8000"; // Change if needed
+const BASE_URL = "https://leave-management-backend-8.onrender.com"; // Change if needed
 
 const getAuthHeaders = () => {
   const token = localStorage.getItem("access_token");
@@ -40,8 +40,6 @@ export const applyLeave = async (leaveData) => {
     },
   });
 };
-
-
 
 export const getStudents = async () => {
   const response = await axios.get(`${BASE_URL}/api/students/`);
