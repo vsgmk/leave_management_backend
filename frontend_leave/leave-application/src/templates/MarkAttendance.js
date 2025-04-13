@@ -36,7 +36,7 @@ const MarkAttendance = () => {
       try {
         const token = localStorage.getItem("access_token");
         const response = await axios.get(
-          `http://127.0.0.1:8000/api/get_students/?year=${year}&division=${division}&batch=${batch}&session_type=${sessionType}&branch=${branch}`,
+          `https://leave-management-backend-8.onrender.com/api/get_students/?year=${year}&division=${division}&batch=${batch}&session_type=${sessionType}&branch=${branch}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // ✅ This is the correct format for JWT
@@ -134,7 +134,7 @@ const MarkAttendance = () => {
 
     try {
       setIsSubmitting(true);
-      const response = await axios.post("http://localhost:8000/api/mark_attendance/", requestData, {
+      const response = await axios.post("https://leave-management-backend-8.onrender.com/api/mark_attendance/", requestData, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
           "Content-Type": "application/json",

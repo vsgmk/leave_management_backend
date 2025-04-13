@@ -14,7 +14,7 @@ const LeaveRequest = () => {
         return;
       }
 
-      const response = await fetch("http://localhost:8000/api/leave_requests/", {
+      const response = await fetch("https://leave-management-backend-8.onrender.com/api/leave_requests/", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -53,7 +53,7 @@ const LeaveRequest = () => {
     try {
       const token = localStorage.getItem("access_token");
 
-      const response = await fetch(`http://localhost:8000/api/approve_leave/${leaveId}/`, {
+      const response = await fetch(`https://leave-management-backend-8.onrender.com/api/approve_leave/${leaveId}/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

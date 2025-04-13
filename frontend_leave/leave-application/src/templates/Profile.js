@@ -21,7 +21,7 @@ const Profile = () => {
       }
 
       try {
-        const response = await fetch("http://localhost:8000/api/profile/", {
+        const response = await fetch("https://leave-management-backend-8.onrender.com/api/profile/", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -57,7 +57,7 @@ const Profile = () => {
   const handleUpdateProfile = async () => {
     try {
       const token = localStorage.getItem("access_token");
-      const response = await fetch("http://localhost:8000/api/update_profile/", {
+      const response = await fetch("https://leave-management-backend-8.onrender.com/api/update_profile/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -16,7 +16,7 @@ const YourLeaves = () => {
         return;
       }
 
-      const response = await fetch("http://localhost:8000/api/student_leaves/", {
+      const response = await fetch("https://leave-management-backend-8.onrender.com/api/student_leaves/", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
