@@ -22,13 +22,13 @@
     "sweetalert2": "^11.17.2",
     "web-vitals": "^2.1.4"
   },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "deploy": "npm run build && npm run deploy"
-  },
+"scripts": {
+  "start": "serve -s build",
+  "build": "react-scripts build",
+  "test": "react-scripts test",
+  "eject": "react-scripts eject",
+  "deploy": "npm run build && npm run deploy"
+},
   "eslintConfig": {
     "extends": [
       "react-app",
