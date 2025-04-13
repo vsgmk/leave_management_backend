@@ -1,0 +1,32 @@
+.navbar {
+    background-color: white;
+    color: black;
+    padding: 5px 40px 5px 50px; /* Top: 5px, Right: 40px, Bottom: 5px, Left: 30px */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: calc(100% - 330px); /* Adjusted for 30px left + 40px right */
+    box-sizing: border-box;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: 10px 300px;
+    border: 2px solid black;
+    border-radius: 12px;
+    height: 50px;
+    z-index: 1000;
+}
+
+
+
+
+.main-content {
+    margin: 0;
+    padding: 0;
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+}
