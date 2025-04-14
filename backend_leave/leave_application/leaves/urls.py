@@ -20,7 +20,7 @@ urlpatterns = [
     path("get_attendance/", get_attendance, name="get_attendance"),
     path("get_students/", get_students, name="get-students"),
     path("mark_attendance/", mark_attendance, name="mark-attendance"),
-    path("edit_attendance/", edit_attendance, name="edit_attendance")
+    path("edit_attendance/", edit_attendance, name="edit_attendance"),
 
     path("verify-reset-otp/", verify_otp_after_reset, name="verify_otp"),
     path("send-otp/", send_otp, name="send_otp"),
