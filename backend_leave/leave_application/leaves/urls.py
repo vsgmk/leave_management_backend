@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import register_student, verify_otp, login_view, apply_leave, register_teacher, verify_teacher_otp, teacher_login, approve_leave, get_teachers, get_teacher_leave_requests, get_leave_requests, get_student_leaves, get_profile, update_profile,     mark_attendance, edit_attendance, get_attendance, attendance_percentage, get_students, mark_attendance ,edit_attendance
+from .views import register_student, verify_otp, login_view, apply_leave, register_teacher, verify_teacher_otp, teacher_login, approve_leave, get_teachers, get_teacher_leave_requests, get_leave_requests, get_student_leaves, get_profile, update_profile,mark_attendance, edit_attendance, get_attendance, attendance_percentage, get_students, mark_attendance ,edit_attendance, send_otp, update_password, verify_otp_after_reset 
 
 urlpatterns = [
     path("register/student/", register_student, name="register"),
@@ -21,4 +21,8 @@ urlpatterns = [
     path("get_students/", get_students, name="get-students"),
     path("mark_attendance/", mark_attendance, name="mark-attendance"),
     path("edit_attendance/", edit_attendance, name="edit_attendance")
+
+    path("verify-reset-otp/", verify_otp_after_reset, name="verify_otp"),
+    path("send-otp/", send_otp, name="send_otp"),
+    path("update-password/", update_password, name="update_password"),
 ]
