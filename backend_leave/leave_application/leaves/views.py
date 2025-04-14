@@ -17,6 +17,9 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from django.db.models import Count
+from django.utils.crypto import get_random_string
+
+from django.core.cache import cache  # using Django's cache for OTP
 
 User = get_user_model()  # Fetch custom user model
 
@@ -926,6 +929,75 @@ def attendance_percentage(request, student_id):
 
     return JsonResponse({"percentage": round(percentage, 2)}, status=200)
 
+User = get_user_model()
+
+@csrf_exempt
+def send_otp(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        email = data.get("email")
+
+        if not email:
+            return JsonResponse({"error": "Email is required"}, status=400)
+
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return JsonResponse({"error": "Email does not exist"}, status=404)
+
+        otp = get_random_string(length=6, allowed_chars="1234567890")
+        cache.set(f"otp_{email}", otp, timeout=120)  # expires in 2 min
+
+        # Send OTP via email
+        send_mail(
+            subject="Your OTP for Password Reset",
+            message=f"Hi {user.first_name or ''}, your OTP is: {otp}",
+            from_email="your_email@gmail.com",
+            recipient_list=[email],
+            fail_silently=False,
+        )
+
+        return JsonResponse({"message": "OTP sent successfully"})
+
+
+@csrf_exempt
+def verify_otp_after_reset(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        email = data.get("email")
+        otp = data.get("otp")
+
+        if not email or not otp:
+            return JsonResponse({"error": "Email and OTP are required"}, status=400)
+
+        cached_otp = cache.get(f"otp_{email}")
+        if cached_otp == otp:
+            return JsonResponse({"message": "OTP verified"})
+        return JsonResponse({"error": "Invalid or expired OTP"}, status=400)
+
+
+@csrf_exempt
+def update_password(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        email = data.get("email")
+        password = data.get("password")
+
+        if not email or not password:
+            return JsonResponse({"error": "Email and password required"}, status=400)
+
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return JsonResponse({"error": "User not found"}, status=404)
+
+        user.set_password(password)
+        user.save()
+
+        # Clear OTP from cache
+        cache.delete(f"otp_{email}")
+
+        return JsonResponse({"message": "Password updated successfully"})
 
 
 
