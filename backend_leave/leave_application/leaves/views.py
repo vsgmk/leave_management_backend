@@ -668,7 +668,9 @@ def mark_attendance(request):
             teacher=teacher,
             division=division,
             session_type=session_type,
-            batch=batch
+            batch=batch,
+            year=year,
+            branch=branch
         ).first()
 
         if existing_attendance:
