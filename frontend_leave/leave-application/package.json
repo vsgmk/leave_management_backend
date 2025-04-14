@@ -1,6 +1,6 @@
 {
   "name": "leave-application",
-  "homepage": "https://github.com/vsgmk/Leave_management_frontend",
+  "homepage": ".",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
