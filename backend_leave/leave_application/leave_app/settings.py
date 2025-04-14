@@ -160,7 +160,7 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "https://leave-management-frontend-4.onrender.com/",
+    "https://leave-management-frontend-4.onrender.com",
     "http://localhost:3000",
 ]
 # Allow all origins (not recommended for production)
